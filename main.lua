@@ -61,7 +61,7 @@ function love.load()
     math.randomseed(os.time())
 
     --set the background image
-    my_background = love.graphics.newImage('background.jpg')
+    my_background = love.graphics.newImage('background.png')
 
 end
 
