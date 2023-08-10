@@ -50,7 +50,8 @@ function love.load()
         x = ship.x + 41,
         y = ship.y + 20, 
         w = 5,
-        h = 5
+        h = 5,
+        flag = "hold"
     }
 	--initialize the laser timer
 	canShoot = true
@@ -104,9 +105,14 @@ function love.update(dt)
 
         if love.keyboard.isDown("space") and canShoot then
         	laser.y = laser.y - (300 * dt)
+            laser.flag = "fire"
         	canShoot = false
 		    canShootTimer = canShootTimerMax
 	    end
+
+        if laser.flag == "fire" then
+            laser.y = laser.y - (300 * dt)
+        end
 end
 
 function love.draw()
