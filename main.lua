@@ -25,6 +25,8 @@ player_score = 0
 --set background color
 love.graphics.setBackgroundColor( 0/255, 0/255, 0/255, 1 )
 
+local my_background = nil
+
 function love.load()
     -- initialize our virtual resolution, which will be rendered within our
     -- actual window no matter its dimensions
@@ -58,13 +60,9 @@ function love.load()
     -- seed the random number generator so that calls to random are always random
     math.randomseed(os.time())
 
-    --initialize the star struct
-    star = {
-        x = math.random(0, WINDOW_WIDTH),
-        y = math.random(0, WINDOW_HEIGHT),
-        w = 3,
-        h = 3
-    }
+    --set the background image
+    my_background = love.graphics.newImage('background.jpg')
+
 end
 
 
@@ -115,6 +113,8 @@ function love.draw()
 
     --set color to white for prototyping, draw two rectangles to represent the ship and the lasers it fires
     love.graphics.setColor(1, 1, 1)
+
+    love.graphics.draw(my_background)
     --love.graphics.rectangle("fill", ship.x, ship.y, ship.w, ship.h)
     love.graphics.draw(ship.sprite, ship.x, ship.y)
 
@@ -123,7 +123,7 @@ function love.draw()
     love.graphics.rectangle("fill", laser.x, laser.y, laser.w, laser.h)
 
     --set color to random for stars
-    love.graphics.setColor(math.random(0, 255)/255, math.random(0, 255)/255, math.random(0, 255)/255)
-    love.graphics.rectangle("fill", star.x, star.y, star.w, star.h)
+    --love.graphics.setColor(math.random(0, 255)/255, math.random(0, 255)/255, math.random(0, 255)/255)
+    --love.graphics.rectangle("fill", star.x, star.y, star.w, star.h)
 
 end
