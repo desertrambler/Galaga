@@ -1,11 +1,11 @@
 --[[
     Author: Clayton Crenshaw
-    Date Created: 07/03/2023
+    Date Created: 08/09/2023
     Game Title: Galaga
     Game States:  
         -Play
-    Game Rules: the computer paddle is the left one and the human controlled one is the right. Otherwise,
-    this is my interpretation of the classic game from 1972. Enjoy!
+        -tbd
+    Game Rules: Control the ship with the joystick and press the button to fire. Enjoy this classic from 1981
 ]]
 -- library that resizes the screen 
 push = require 'push'
@@ -78,23 +78,28 @@ function love.update(dt)
     --controls the ship with the left and right arrows
     if love.keyboard.isDown("left") then
 	ship.x = ship.x - (90 * dt)
- 	laser.x = laser.x - (90 * dt)
+    	if laser.flag == "hold" then
+            laser.x = laser.x - (90 * dt)
+        end
     
         if ship.x < 0 then
-        ship.x = 0
-        laser.x = 50
+            ship.x = 0
+            laser.x = 50
         end	
 
     end
 
     if love.keyboard.isDown("right") then
         ship.x = ship.x + (90 * dt)
-        laser.x = laser.x + (90 * dt)
+		if laser.flag == "hold" then
+            laser.x = laser.x + (90 * dt)
+        end
+
 	
-	if ship.x > (WINDOW_WIDTH - 100) then
-		ship.x = WINDOW_WIDTH - 100
-		laser.x = WINDOW_WIDTH - 45
-	end
+        if ship.x > (WINDOW_WIDTH - 100) then
+            ship.x = WINDOW_WIDTH - 100
+            laser.x = WINDOW_WIDTH - 45
+	    end
     end
 
     --shoot lasers with the spacebar         
