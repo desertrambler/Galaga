@@ -25,8 +25,6 @@ player_score = 0
 --set background color
 love.graphics.setBackgroundColor( 0/255, 0/255, 0/255, 1 )
 
-random = math.randomseed(os.time())
-
 function love.load()
     -- initialize our virtual resolution, which will be rendered within our
     -- actual window no matter its dimensions
@@ -52,7 +50,21 @@ function love.load()
         w = 5,
         h = 5
     }
+	--initialize the laser timer
+	canShoot = true
+	canShootTimerMax = 0.2 
+	canShootTimer = canShootTimerMax
 
+    -- seed the random number generator so that calls to random are always random
+    math.randomseed(os.time())
+
+    --initialize the star struct
+    star = {
+        x = math.random(0, WINDOW_WIDTH),
+        y = math.random(0, WINDOW_HEIGHT),
+        w = 3,
+        h = 3
+    }
 end
 
 
@@ -66,21 +78,37 @@ function love.update(dt)
 
     --controls the ship with the left and right arrows
     if love.keyboard.isDown("left") then
-        ship.x = ship.x - (30 * dt)
-        laser.x = laser.x - (30 * dt)
+	ship.x = ship.x - (90 * dt)
+ 	laser.x = laser.x - (90 * dt)
+    
+        if ship.x < 0 then
+        ship.x = 0
+        laser.x = 50
+        end	
+
     end
 
     if love.keyboard.isDown("right") then
-        ship.x = ship.x + (30 * dt)
-        laser.x = laser.x + (30 * dt)
+        ship.x = ship.x + (90 * dt)
+        laser.x = laser.x + (90 * dt)
+	
+	if ship.x > (WINDOW_WIDTH - 100) then
+		ship.x = WINDOW_WIDTH - 100
+		laser.x = WINDOW_WIDTH - 45
+	end
     end
 
-    --shoot lasers with the spacebar
-    function love.keypressed(k)
-        if k == 'space' then
-            laser.y = laser.y - (100 * dt)
-        end
-    end
+    --shoot lasers with the spacebar         
+         canShootTimer = canShootTimer - (1 * dt)
+         if canShootTimer < 0 then
+                 canShoot = true
+         end
+
+        if love.keyboard.isDown("space") and canShoot then
+        	laser.y = laser.y - (300 * dt)
+        	canShoot = false
+		    canShootTimer = canShootTimerMax
+	    end
 end
 
 function love.draw()
@@ -94,11 +122,8 @@ function love.draw()
     love.graphics.setColor(240/255, 0/255, 0/255)
     love.graphics.rectangle("fill", laser.x, laser.y, laser.w, laser.h)
 
-end
+    --set color to random for stars
+    love.graphics.setColor(math.random(0, 255)/255, math.random(0, 255)/255, math.random(0, 255)/255)
+    love.graphics.rectangle("fill", star.x, star.y, star.w, star.h)
 
-function shootLasers(dt)
-    while laser.y < WINDOW_HEIGHT
-        do
-            laser.y = laser.y - (100 * dt)
-        end
 end
