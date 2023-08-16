@@ -3,8 +3,9 @@
     Date Created: 08/09/2023
     Game Title: Galaga
     Game States:  
-        -Play
-        -tbd
+        -Opening Menu
+        -New Game
+        -Credits
     Game Rules: Control the ship with the joystick and press the button to fire. Enjoy this classic from 1981
 ]]
 -- library that resizes the screen 
@@ -27,6 +28,12 @@ love.graphics.setBackgroundColor( 0/255, 0/255, 0/255, 1 )
 
 local my_background = nil
 
+local logo = nil
+
+local opening_menu_timer = 0
+
+local soundData = love.sound.newSoundData('sounds/opening_theme.mp3')
+
 function love.load()
     -- initialize our virtual resolution, which will be rendered within our
     -- actual window no matter its dimensions
@@ -42,7 +49,7 @@ function love.load()
         y = WINDOW_HEIGHT - 90,
         w = 60,
         h = 20,
-        sprite = love.graphics.newImage("ship.png")
+        sprite = love.graphics.newImage("assets/ship.png")
     }
 
     --initialize the laser struct
@@ -53,6 +60,10 @@ function love.load()
         h = 5,
         flag = "hold"
     }
+
+    --initialize the game state
+    state = 'opening_menu'
+
 	--initialize the laser timer
 	canShoot = true
 	canShootTimerMax = 0.2 
@@ -62,7 +73,10 @@ function love.load()
     math.randomseed(os.time())
 
     --set the background image
-    my_background = love.graphics.newImage('background.png')
+    my_background = love.graphics.newImage('assets/background.png')
+
+    --set the logo on the menu state
+    logo = love.graphics.newImage('assets/logo.png')
 
 end
 
@@ -118,23 +132,34 @@ function love.update(dt)
         if laser.flag == "fire" then
             laser.y = laser.y - (300 * dt)
         end
+
+        opening_menu_timer = opening_menu_timer + (1 * dt)
+                
+        if opening_menu_timer == 4 then
+            state = 'play'
+        end
 end
 
 function love.draw()
+    if state == 'opening_menu' then
+        --set color to black for the opening screen
+        love.graphics.draw(logo, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+    end
 
-    --set color to white for prototyping, draw two rectangles to represent the ship and the lasers it fires
-    love.graphics.setColor(1, 1, 1)
+    if state == 'play' then
+        --set color to white for prototyping, draw two rectangles to represent the ship and the lasers it fires
+        love.graphics.setColor(1, 1, 1)
 
-    love.graphics.draw(my_background)
-    --love.graphics.rectangle("fill", ship.x, ship.y, ship.w, ship.h)
-    love.graphics.draw(ship.sprite, ship.x, ship.y)
+        love.graphics.draw(my_background)
+        --love.graphics.rectangle("fill", ship.x, ship.y, ship.w, ship.h)
+        love.graphics.draw(ship.sprite, ship.x, ship.y)
 
-    --set laser color to red
-    love.graphics.setColor(240/255, 0/255, 0/255)
-    love.graphics.rectangle("fill", laser.x, laser.y, laser.w, laser.h)
+        --set laser color to red
+        love.graphics.setColor(240/255, 0/255, 0/255)
+        love.graphics.rectangle("fill", laser.x, laser.y, laser.w, laser.h)
 
-    --set color to random for stars
-    --love.graphics.setColor(math.random(0, 255)/255, math.random(0, 255)/255, math.random(0, 255)/255)
-    --love.graphics.rectangle("fill", star.x, star.y, star.w, star.h)
-
+        --set color to random for stars
+        --love.graphics.setColor(math.random(0, 255)/255, math.random(0, 255)/255, math.random(0, 255)/255)
+        --love.graphics.rectangle("fill", star.x, star.y, star.w, star.h)
+    end
 end
