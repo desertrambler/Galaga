@@ -38,11 +38,10 @@ function love.load()
     -- initialize our virtual resolution, which will be rendered within our
     -- actual window no matter its dimensions
     push:setupScreen(VIRTUAL_WIDTH, VIRTUAL_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, {
-        fullscreen = false,
+        fullscreen = true,
         resizable = true,
         vsync = true
     })
-
     --initialize the ship struct
     ship = {
         x = WINDOW_WIDTH / 2,
@@ -135,7 +134,7 @@ function love.update(dt)
 
         opening_menu_timer = opening_menu_timer + (1 * dt)
                 
-        if opening_menu_timer == 4 then
+        if opening_menu_timer > 10 then
             state = 'play'
         end
 end
@@ -143,7 +142,8 @@ end
 function love.draw()
     if state == 'opening_menu' then
         --set color to black for the opening screen
-        love.graphics.draw(logo, WINDOW_WIDTH / 2, WINDOW_HEIGHT / 2)
+        love.graphics.draw(logo, WINDOW_WIDTH / 3, WINDOW_HEIGHT / 4)
+        love.audio.play(sounds/opening_theme.mp3)
     end
 
     if state == 'play' then
