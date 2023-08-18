@@ -4,6 +4,7 @@
 The classic game from 1981. Written in Lua and Love2D
 
 <h2>Running on a Desktop</h2>	
+
 1. Download the Lua programming language if you don't already have it: https://www.lua.org/download.html
 
 2. Download the Love2d game framework: https://love2d.org/#download
