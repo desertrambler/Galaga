@@ -11,7 +11,10 @@ The classic game from 1981. Written in Lua and Love2D
 
 3. Clone the GitHub repo however you usually clone them
 
-4. Navigate to the directory you just cloned; from the root of the directory, open a Terminal 
-    window and run "love ." This should open the game
+4. Navigate to the directory you just cloned; from the root of the directory, open a Terminal window and run "love ." This should open the game
     
 5. Have fun!
+
+<h2>Steps for running on a Raspberry Pi like a game console</h2>
+
+Coming soon...
