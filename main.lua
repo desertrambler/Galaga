@@ -48,7 +48,7 @@ function love.load()
     --initialize the ship struct
     ship = {
         x = WINDOW_WIDTH / 2,
-        y = WINDOW_HEIGHT - 20,
+        y = WINDOW_HEIGHT - 10,
         w = 30,
         h = 10,
         sprite = love.graphics.newImage("assets/ship.png")
