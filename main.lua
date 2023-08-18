@@ -4,8 +4,7 @@
     Game Title: Galaga
     Game States:  
         -Opening Menu
-        -New Game
-        -Credits
+        -Play
     Game Rules: Control the ship with the joystick and press the button to fire. Enjoy this classic from 1981
 ]]
 -- library that resizes the screen 
@@ -16,11 +15,10 @@ WINDOW_WIDTH = 1280
 WINDOW_HEIGHT = 720
 
 -- size we're trying to emulate with push
-VIRTUAL_WIDTH = 600
-VIRTUAL_HEIGHT = 380
+VIRTUAL_WIDTH = 1400
+VIRTUAL_HEIGHT = 1000
 
-
--- initialize scores
+-- initialize score
 player_score = 0
 
 --set background color
@@ -34,6 +32,9 @@ local opening_menu_timer = 0
 
 local soundData = love.sound.newSoundData('sounds/opening_theme.mp3')
 
+--set the font
+local font = love.graphics.newFont('assets/font.ttf', 24)
+
 function love.load()
     -- initialize our virtual resolution, which will be rendered within our
     -- actual window no matter its dimensions
@@ -42,12 +43,14 @@ function love.load()
         resizable = true,
         vsync = true
     })
+
+    love.graphics.setDefaultFilter( 'nearest', 'nearest' )
     --initialize the ship struct
     ship = {
         x = WINDOW_WIDTH / 2,
-        y = WINDOW_HEIGHT - 90,
-        w = 60,
-        h = 20,
+        y = WINDOW_HEIGHT - 20,
+        w = 30,
+        h = 10,
         sprite = love.graphics.newImage("assets/ship.png")
     }
 
@@ -63,11 +66,6 @@ function love.load()
     --initialize the game state
     state = 'opening_menu'
 
-	--initialize the laser timer
-	canShoot = true
-	canShootTimerMax = 0.2 
-	canShootTimer = canShootTimerMax
-
     -- seed the random number generator so that calls to random are always random
     math.randomseed(os.time())
 
@@ -77,6 +75,10 @@ function love.load()
     --set the logo on the menu state
     logo = love.graphics.newImage('assets/logo.png')
 
+    sounds = {
+        ['opening'] = love.audio.newSource('sounds/opening_theme.mp3', 'static'),
+        ['laser'] = love.audio.newSource('sounds/laser.mp3', 'static'),
+    }
 end
 
 
@@ -115,35 +117,30 @@ function love.update(dt)
 	    end
     end
 
-    --shoot lasers with the spacebar         
-         canShootTimer = canShootTimer - (1 * dt)
-         if canShootTimer < 0 then
-                 canShoot = true
-         end
-
-        if love.keyboard.isDown("space") and canShoot then
-        	laser.y = laser.y - (300 * dt)
+        if love.keyboard.isDown("space") then
             laser.flag = "fire"
-        	canShoot = false
-		    canShootTimer = canShootTimerMax
+            sounds['laser']:play()
 	    end
 
         if laser.flag == "fire" then
             laser.y = laser.y - (300 * dt)
+
         end
 
         opening_menu_timer = opening_menu_timer + (1 * dt)
                 
-        if opening_menu_timer > 10 then
+        if opening_menu_timer > 6 then
             state = 'play'
+        end
+
+        if state == 'opening_menu' then
+            sounds['opening']:play()
         end
 end
 
 function love.draw()
     if state == 'opening_menu' then
-        --set color to black for the opening screen
-        love.graphics.draw(logo, WINDOW_WIDTH / 3, WINDOW_HEIGHT / 4)
-        --love.audio.play(sounds/opening_theme.mp3)
+        love.graphics.draw(logo, WINDOW_WIDTH / 2.5, WINDOW_HEIGHT / 3)
     end
 
     if state == 'play' then
@@ -161,5 +158,11 @@ function love.draw()
         --set color to random for stars
         --love.graphics.setColor(math.random(0, 255)/255, math.random(0, 255)/255, math.random(0, 255)/255)
         --love.graphics.rectangle("fill", star.x, star.y, star.w, star.h)
+
+        love.graphics.setFont(font)
+
+        -- Draws "Hello world!" at position x: 100, y: 200 with the custom font applied.
+        love.graphics.print(player_score, 20, WINDOW_HEIGHT / 12)
+
     end
 end
