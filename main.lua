@@ -143,7 +143,7 @@ function love.draw()
     if state == 'opening_menu' then
         --set color to black for the opening screen
         love.graphics.draw(logo, WINDOW_WIDTH / 3, WINDOW_HEIGHT / 4)
-        love.audio.play(sounds/opening_theme.mp3)
+        --love.audio.play(sounds/opening_theme.mp3)
     end
 
     if state == 'play' then
